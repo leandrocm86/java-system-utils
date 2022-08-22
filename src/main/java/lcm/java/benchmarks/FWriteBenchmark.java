@@ -11,7 +11,7 @@ import lcm.java.system.F;
 
 class FWriteBenchmark extends VoidBenchmark<List<String>> {
     FWriteBenchmark(int size) {
-        super("VoidBenchmark", Arrays.stream(Benchmark.generateNanos(size)).map(l -> l.toString()).toList());
+        super("FBenchmark", Arrays.stream(Benchmark.generateNanos(size)).map(l -> l.toString()).toList());
     }
 
     static String BASE_PATH = "C:\\Users\\leand\\Desktop\\";
