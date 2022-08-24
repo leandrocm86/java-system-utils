@@ -114,6 +114,15 @@ public class F {
     }
 
     /**
+     * Deletes the file on the given path, if it exists.
+     */
+    public static void deleteIfExists(String path) {
+        File file = new File(path);
+        if (file.exists())
+            file.delete();
+    }
+
+    /**
      * Opens a file on the given path or throws an exception if the file doesn't exist.
      * @throw IllegalArgumentException if the file doesn't exist.
      */
