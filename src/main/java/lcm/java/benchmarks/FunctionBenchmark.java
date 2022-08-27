@@ -69,7 +69,7 @@ class FunctionBenchmark<I, O> {
     }
 
     boolean equalInputs(I i1, I i2) {
-        return equalInputs(i1, i2);
+        return Benchmark.equalObjects(i1, i2);
     }
 
 }
