@@ -72,8 +72,8 @@ public class TimeFormatterTest {
 
     @Test
     void testStringToEpoch() {
-        assertEquals("05/01/1986 12:30:30", new TimeFormatter("dd/MM/yyyy HH:mm:ss").secondsToString(505319430));
-        assertEquals("05/01/1986 12:30:30.555", new TimeFormatter("dd/MM/yyyy HH:mm:ss.SSS").millisToString(505319430555L));
+        assertEquals("05/01/1986 12:30:30", new TimeFormatter("dd/MM/yyyy HH:mm:ss").secondsToString(TEST_SECONDS));
+        assertEquals("05/01/1986 12:30:30.555", new TimeFormatter("dd/MM/yyyy HH:mm:ss.SSS").millisToString(TEST_MILLIS + 555));
     }
 
 }
