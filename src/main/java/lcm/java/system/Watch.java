@@ -41,7 +41,7 @@ public class Watch {
 
     /** 
      * Retrieves all watches associated with a name (watches created through the {@link #get(String)} method).
-     * @return HashMap<String, Watch> - Map containing each clock by its name.
+     * @return HashMap&lt;String, Watch&gt; - Map containing each clock by its name.
      */
     public static HashMap<String, Watch> getAllWatches() {
         return watchesByName;

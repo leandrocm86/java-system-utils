@@ -27,6 +27,7 @@ public class F {
 
     /**
      * Writes the given string to the file, overwriting any existing content.
+     * @param content - Content to be written.
      */
     public void write(String content) {
         try {
@@ -38,6 +39,7 @@ public class F {
 
     /**
      * Writes all elements from the given iterable to the file, overwriting any existing content.
+     * @param content - Content to be written.
      */
     public void write(Iterable<? extends CharSequence> content) {
         try {
@@ -49,6 +51,7 @@ public class F {
 
     /**
      * Appends the given string to the end of the file.
+     * @param content - Contend to be appended.
      */
     public void append(String content) {
         try {
@@ -60,6 +63,7 @@ public class F {
 
     /**
      * Appends the given string to the end of the file, adding a line break at the end.
+     * @param content - Content to be appended.
      */
     public void appendLn(String content) {
         append(content + System.lineSeparator());
@@ -67,6 +71,7 @@ public class F {
 
     /**
      * Appends all elements from the given iterable to the file.
+     * @param content - Content to be appended.
      */
     public void append(Iterable<? extends CharSequence> content) {
         try {
@@ -78,6 +83,7 @@ public class F {
 
     /**
      * Reads the whole content of the file as a single string.
+     * @return String
      */
     public String read() {
         try {
@@ -89,6 +95,7 @@ public class F {
 
     /**
      * Reads the file as a list containing each line as a string.
+     * @return List&lt;String&gt;
      */
     public List<String> readAsList() {
         try {
@@ -108,6 +115,8 @@ public class F {
 
     /**
      * Checks if a file exists on the given path.
+     * @param path - File's location path.
+     * @return boolean - True if the file exists.
      */
     public static boolean exists(String path) {
         return new File(path).exists();
@@ -115,6 +124,7 @@ public class F {
 
     /**
      * Deletes the file on the given path, if it exists.
+     * @param path - File's location path.
      */
     public static void deleteIfExists(String path) {
         File file = new File(path);
@@ -124,7 +134,9 @@ public class F {
 
     /**
      * Opens a file on the given path or throws an exception if the file doesn't exist.
-     * @throw IllegalArgumentException if the file doesn't exist.
+     * @param path - File's location path.
+     * @return F - Instance of F encapsulating the file.
+     * @throws IllegalArgumentException if the file doesn't exist.
      */
     public static F get(String path) {
         F f = new F(path);
@@ -135,7 +147,9 @@ public class F {
 
     /**
      * Creates a file on the given path or throws an exception if the file already exists.
-     * @throw IllegalArgumentException if the file already exists.
+     * @param path - File's location path.
+     * @return F - Instance of F encapsulating the file.
+     * @throws IllegalArgumentException if the file already exists.
      */
     public static F create(String path) {
         F f = new F(path);
@@ -151,6 +165,8 @@ public class F {
 
     /**
      * Opens a file on the given path, creating it if it doesn't exist.
+     * @param path - File's location path.
+     * @return F - Instance of F encapsulating the file.
      */
     public static F getOrCreate(String path) {
         F f = new F(path);

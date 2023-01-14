@@ -38,7 +38,7 @@ public class Sys {
 
     /**
      * Executes a command on system and returns its output.
-     * If no output is expected, consider using {@link #exec(String...)}
+     * If no output is expected, consider using {@link #exec(String)}
      * @param command - command to be executed on the system.
      * @return output of the command's execution.
      */
