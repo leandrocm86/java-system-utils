@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>lcm.java</groupId>
   <artifactId>system-utils</artifactId>
-  <version>1.0</version>
+  <version>1.0.2</version>
   <properties>
     <maven.compiler.source>1.17</maven.compiler.source>
     <maven.compiler.target>1.17</maven.compiler.target>
@@ -45,7 +45,7 @@
               <goal>jar</goal>
             </goals>
           </execution>
-			</executions>
+	</executions>
       </plugin>
     </plugins>
     <sourceDirectory>src/main/java/lcm/java/system</sourceDirectory>
