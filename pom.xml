@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>lcm.java</groupId>
   <artifactId>system-utils</artifactId>
-  <version>1.0.2</version>
+  <version>1.0</version>
   <properties>
     <maven.compiler.source>1.17</maven.compiler.source>
     <maven.compiler.target>1.17</maven.compiler.target>
@@ -45,11 +45,32 @@
               <goal>jar</goal>
             </goals>
           </execution>
-	</executions>
+			</executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+            <execution>
+                <id>attach-sources</id>
+                <goals>
+                    <goal>jar</goal>
+                </goals>
+            </execution>
+        </executions>
       </plugin>
     </plugins>
     <sourceDirectory>src/main/java/lcm/java/system</sourceDirectory>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.4.1</version>
+      </plugin>
+    </plugins>
+  </reporting>
   <distributionManagement>
     <repository>
       <id>github</id>
