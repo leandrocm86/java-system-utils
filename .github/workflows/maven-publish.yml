@@ -26,7 +26,7 @@ jobs:
       run: mvn -B package --file pom.xml
       
     - name: Upload
-      run: mkdir staging && cp target/*.jar staging/
+      run: mkdir staging && cp target/system-utils-*-sources.jar target/system-utils-*.jar staging/
     - uses: actions/upload-artifact@v2
       with:
         name: java-system-utils
