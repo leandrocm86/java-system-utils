@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>lcm.java</groupId>
   <artifactId>system-utils</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <properties>
     <maven.compiler.source>1.17</maven.compiler.source>
     <maven.compiler.target>1.17</maven.compiler.target>
@@ -29,6 +29,9 @@
         <version>3.10.1</version>
         <configuration>
             <release>17</release>
+            <excludes>
+                <exclude>**/lcm/java/benchmarks/</exclude>
+            </excludes>
         </configuration>
       </plugin>
       <plugin>
@@ -37,6 +40,9 @@
         <version>3.4.1</version>
         <configuration>
             <release>17</release>
+            <sourceFileExcludes>
+                <sourceFileExclude>**/lcm/java/benchmarks/</sourceFileExclude>
+            </sourceFileExcludes>
         </configuration>
         <executions>
           <execution>
@@ -50,6 +56,11 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
+        <configuration>
+            <excludes>
+                <exclude>**/lcm/java/benchmarks/</exclude>
+            </excludes>
+        </configuration>
         <executions>
             <execution>
                 <id>attach-sources</id>
@@ -60,17 +71,8 @@
         </executions>
       </plugin>
     </plugins>
-    <sourceDirectory>src/main/java/lcm/java/system</sourceDirectory>
+    <sourceDirectory>src/main/java/</sourceDirectory>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.4.1</version>
-      </plugin>
-    </plugins>
-  </reporting>
   <distributionManagement>
     <repository>
       <id>github</id>
