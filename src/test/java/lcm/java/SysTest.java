@@ -10,7 +10,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import lcm.java.system.F;
+import lcm.java.system.Filer;
 import lcm.java.system.Sys;
 
 @TestMethodOrder(MethodOrderer.Alphanumeric.class)
@@ -22,12 +22,12 @@ class SysTest {
 
     @BeforeEach
     void createTestFile() {
-        F.create(TEST_FILE);
+        Filer.create(TEST_FILE);
     }
 
     @AfterEach
     void deleteTestFile() {
-        F.deleteIfExists(TEST_FILE);
+        Filer.deleteIfExists(TEST_FILE);
     }
 
     @Test
@@ -39,7 +39,7 @@ class SysTest {
     @Test
     void testExecOK() {
         Sys.exec(DELETE_CMD);
-        assertFalse(F.exists(TEST_FILE));
+        assertFalse(Filer.exists(TEST_FILE));
     }
 
     @Test

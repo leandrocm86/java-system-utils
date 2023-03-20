@@ -15,7 +15,7 @@ public class Log {
 
     private static final DateTimeFormatter dtfmt = DateTimeFormatter.ofPattern("dd-MMM HH:mm:ss");
 
-    private static F file;
+    private static Filer file;
     private static PrintStream stream;
     private static List<String> buffer;
 
@@ -24,7 +24,7 @@ public class Log {
      * If the given path is null, no file will be used.
      */
     public static void initFile(String filePath) {
-        file = filePath != null ? F.getOrCreate(filePath) : null;
+        file = filePath != null ? Filer.getOrCreate(filePath) : null;
     }
 
     /**
@@ -66,7 +66,7 @@ public class Log {
         if (maxToSave > 0 && maxToSave < buffer.size()) {
             buffer = buffer.subList(buffer.size() - maxToSave, buffer.size());
         }
-        F.getOrCreate(filePath).append(buffer);
+        Filer.getOrCreate(filePath).append(buffer);
         buffer.clear();
     }
 

@@ -10,9 +10,9 @@ import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import lcm.java.system.F;
+import lcm.java.system.Filer;
 
-class FTest {
+class FilerTest {
 
     static final String TEST_FILE = "ftest.txt";
 
@@ -35,31 +35,31 @@ class FTest {
     @Test
     void testGetOK() {
         makeTestFile();
-        F f = F.get(TEST_FILE);
+        Filer f = Filer.get(TEST_FILE);
         assertTrue(f != null);
     }
 
     @Test
     void testGetFail() {
-        assertThrows(IllegalArgumentException.class, () -> F.get(TEST_FILE));
+        assertThrows(IllegalArgumentException.class, () -> Filer.get(TEST_FILE));
     }
 
     @Test
     void testCreateOK() {
-        F f = F.create(TEST_FILE);
+        Filer f = Filer.create(TEST_FILE);
         assertTrue(f != null);
     }
 
     @Test
     void testCreateFail() {
         makeTestFile();
-        assertThrows(IllegalArgumentException.class, () -> F.create(TEST_FILE));
+        assertThrows(IllegalArgumentException.class, () -> Filer.create(TEST_FILE));
     }
 
     @Test
     void testWriteRead() {
         makeTestFile();
-        F f = F.get(TEST_FILE);
+        Filer f = Filer.get(TEST_FILE);
         f.write("Hello World");
         assertEquals("Hello World", f.read());
         f.write("Hello Galaxy");
@@ -68,7 +68,7 @@ class FTest {
 
     @Test
     void testAppend() {
-        F f = F.getOrCreate(TEST_FILE);
+        Filer f = Filer.getOrCreate(TEST_FILE);
         f.appendLn("Hello World");
         assertEquals("Hello World", f.read().trim());
         f.append("Hello Galaxy");

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class Props {
     private static HashMap<String, String> properties;
     private static boolean autoSave = false;
-    private static F file;
+    private static Filer file;
 
     /**
      * Sets the autosave behavior that writes to file at each changed property.
@@ -31,7 +31,7 @@ public class Props {
      * @param filePath - Path of the properties file.
      */
     public static void load(String filePath) {
-        file = F.get(filePath);
+        file = Filer.get(filePath);
         var lines = file.readAsList();
         properties = new HashMap<String, String>();
         for (var line : lines) {

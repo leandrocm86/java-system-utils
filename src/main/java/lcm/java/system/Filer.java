@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * A wrapper for java.io.File and java.nio.file.Files to facilitate read/write operations.
  */
-public class F {
+public class Filer {
 
     private static Charset charset = Charset.forName("UTF-8");
 
@@ -20,7 +20,7 @@ public class F {
 
     // The instances must be created through the static builder methods
     // get, create or getOrCreate, according to the existance of the file.
-    private F(String path) {
+    private Filer(String path) {
         this.file = new File(path);
         this.filePath = file.toPath();
     }
@@ -135,11 +135,11 @@ public class F {
     /**
      * Opens a file on the given path or throws an exception if the file doesn't exist.
      * @param path - File's location path.
-     * @return F - Instance of F encapsulating the file.
+     * @return Filer - Instance of Filer encapsulating the file.
      * @throws IllegalArgumentException if the file doesn't exist.
      */
-    public static F get(String path) {
-        F f = new F(path);
+    public static Filer get(String path) {
+        Filer f = new Filer(path);
         if (!f.file.exists())
             throw new IllegalArgumentException("File " + path + " doesn't exist!");
         return f;
@@ -148,11 +148,11 @@ public class F {
     /**
      * Creates a file on the given path or throws an exception if the file already exists.
      * @param path - File's location path.
-     * @return F - Instance of F encapsulating the file.
+     * @return Filer - Instance of Filer encapsulating the file.
      * @throws IllegalArgumentException if the file already exists.
      */
-    public static F create(String path) {
-        F f = new F(path);
+    public static Filer create(String path) {
+        Filer f = new Filer(path);
         if (f.file.exists())
             throw new IllegalArgumentException("File " + path + " already exists!");
         try {
@@ -166,10 +166,10 @@ public class F {
     /**
      * Opens a file on the given path, creating it if it doesn't exist.
      * @param path - File's location path.
-     * @return F - Instance of F encapsulating the file.
+     * @return Filer - Instance of Filer encapsulating the file.
      */
-    public static F getOrCreate(String path) {
-        F f = new F(path);
+    public static Filer getOrCreate(String path) {
+        Filer f = new Filer(path);
         if (!f.file.exists())
             try {
                 f.file.createNewFile();

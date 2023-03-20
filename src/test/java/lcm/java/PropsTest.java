@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import lcm.java.system.F;
+import lcm.java.system.Filer;
 import lcm.java.system.Props;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -30,13 +30,13 @@ class PropsTest {
     @Test
     @AfterAll
     static void clean() {
-        F.deleteIfExists(TEST_FILE);
+        Filer.deleteIfExists(TEST_FILE);
     }
 
     @Test
     @Order(1)
     void testLoad() {
-        F.getOrCreate(TEST_FILE).write(Arrays.asList(TEST_PROPERTIES));
+        Filer.getOrCreate(TEST_FILE).write(Arrays.asList(TEST_PROPERTIES));
         Props.load(TEST_FILE);
         assertEquals("Leo", Props.getString("name"));
         assertEquals("36", Props.getString("age"));
@@ -89,18 +89,18 @@ class PropsTest {
     @Test
     @Order(4)
     void testSave() {
-        assertFalse(F.get(TEST_FILE).read().contains("Mary"));
+        assertFalse(Filer.get(TEST_FILE).read().contains("Mary"));
         Props.save();
-        assertTrue(F.get(TEST_FILE).read().contains("Mary"));
+        assertTrue(Filer.get(TEST_FILE).read().contains("Mary"));
     }
 
     @Test
     @Order(5)
     void testSaveAutosave() {
         Props.setAutoSave(true);
-        assertFalse(F.get(TEST_FILE).read().contains("Vanessa"));
+        assertFalse(Filer.get(TEST_FILE).read().contains("Vanessa"));
         Props.setString("name", "Vanessa");
-        assertTrue(F.get(TEST_FILE).read().contains("Vanessa"));
+        assertTrue(Filer.get(TEST_FILE).read().contains("Vanessa"));
     }
 
 
