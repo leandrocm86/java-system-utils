@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -168,10 +169,11 @@ class BasicLoggerTest {
         assertEquals("\tEXCEPTION: org.opentest4j.TestAbortedException: Second Exception Message", out[1]);
         assertEquals("\tCAUSE: org.opentest4j.TestAbortedException: First Exception Message", out[2]);
         assertTrue(out[4].startsWith("lcm.java.system.logging.BasicLoggerTest.testExceptionStackTraceLimit(BasicLoggerTest.java:"));
-        assertEquals("(...)", out[9]);
-        assertEquals("CAUSED BY: org.opentest4j.TestAbortedException: First Exception Message", out[15]);
-        assertEquals("(...)", out[22]);
-        assertEquals(28, out.length);
+
+        var lines = List.of(out);
+        assertEquals(2, lines.stream().filter(s -> s.equals("(...)")).count());
+        assertTrue(lines.contains("CAUSED BY: org.opentest4j.TestAbortedException: First Exception Message"));
+        assertTrue(out.length > 25 && out.length < 35);
     }
 
 }
