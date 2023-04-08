@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lcm.java.system.F;
+import lcm.java.system.Filer;
 
 class FWriteBenchmark extends VoidBenchmark<List<String>> {
     FWriteBenchmark(int size) {
@@ -19,11 +19,11 @@ class FWriteBenchmark extends VoidBenchmark<List<String>> {
 
     void run() throws Exception {
         File listFile = new File(BASE_PATH + "list.txt");
-        F flist = F.getOrCreate(BASE_PATH + "flist.txt");
+        Filer flist = Filer.getOrCreate(BASE_PATH + "flist.txt");
         File stringFile = new File(BASE_PATH + "string.txt");
-        F fstring = F.getOrCreate(BASE_PATH + "fstring.txt");
+        Filer fstring = Filer.getOrCreate(BASE_PATH + "fstring.txt");
         File openAndAppendFile = new File(BASE_PATH + "append.txt");
-        F fappend = F.getOrCreate(BASE_PATH + "fappend.txt");
+        Filer fappend = Filer.getOrCreate(BASE_PATH + "fappend.txt");
         File appendFile = new File(BASE_PATH + "append.txt");
 
         if (listFile.exists())
@@ -41,7 +41,7 @@ class FWriteBenchmark extends VoidBenchmark<List<String>> {
         flist.delete(); fstring.delete(); fappend.delete();
         
         runVoidFunction(input -> {
-            F.create(BASE_PATH + "fstring.txt").write(input.stream().collect(Collectors.joining(LN)));
+            Filer.create(BASE_PATH + "fstring.txt").write(input.stream().collect(Collectors.joining(LN)));
         }, "Writing string with F");
 
         runVoidFunction(input -> {
@@ -49,7 +49,7 @@ class FWriteBenchmark extends VoidBenchmark<List<String>> {
         }, "Writing string");
 
         runVoidFunction(input -> {
-            F f = F.create(BASE_PATH + "flist.txt");
+            Filer f = Filer.create(BASE_PATH + "flist.txt");
             f.write(input);
         }, "Writing list with F");
 
@@ -58,7 +58,7 @@ class FWriteBenchmark extends VoidBenchmark<List<String>> {
         }, "Writing list");
 
         runVoidFunction(input -> {
-            F f = F.getOrCreate(BASE_PATH + "fappend.txt");
+            Filer f = Filer.getOrCreate(BASE_PATH + "fappend.txt");
             for (String l : input)
                 f.appendLn(l);
         }, "Appending strings with appendLn");
