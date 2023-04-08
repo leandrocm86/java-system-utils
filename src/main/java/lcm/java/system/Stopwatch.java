@@ -6,19 +6,19 @@ import java.util.HashMap;
  * Utility class to measure time passed between two moments.
  * It makes it easier to make benchmarks in different application parts simultaneously.
  */
-public class Watch {
+public class Stopwatch {
 
     private long lastTimestamp;
     private long totalTime;
 
-    private static HashMap<String, Watch> watchesByName;
+    private static HashMap<String, Stopwatch> watchesByName;
     
     /** 
      * Instantiates a new watch and initializes it with the current time.
      * If you wish to share this watch across different methods or classes,
      * consider using the static {@link #get(String)} method instead of directly creating a new one.
      */
-    public Watch() {
+    public Stopwatch() {
         lastTimestamp = System.currentTimeMillis();
     }
 
@@ -27,13 +27,13 @@ public class Watch {
      * This instance is created when it's called for the first time, and the same is returned at each call.
      * @param watchName - Name of the clock to retrieve.
      */
-    public static Watch get(String watchName) {
+    public static Stopwatch get(String watchName) {
         if (watchesByName == null) {
-            watchesByName = new HashMap<String, Watch>();
+            watchesByName = new HashMap<String, Stopwatch>();
         }
-        Watch c = watchesByName.get(watchName);
+        Stopwatch c = watchesByName.get(watchName);
         if (c == null) {
-            c = new Watch();
+            c = new Stopwatch();
             watchesByName.put(watchName, c);
         }
         return c;
@@ -43,7 +43,7 @@ public class Watch {
      * Retrieves all watches associated with a name (watches created through the {@link #get(String)} method).
      * @return HashMap&lt;String, Watch&gt; - Map containing each clock by its name.
      */
-    public static HashMap<String, Watch> getAllWatches() {
+    public static HashMap<String, Stopwatch> getAllWatches() {
         return watchesByName;
     }
 
