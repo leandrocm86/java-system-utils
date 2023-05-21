@@ -1,7 +1,6 @@
 package lcm.java.system.logging;
 
 import java.io.PrintStream;
-import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -31,7 +30,7 @@ public class OLog {
         logger.maxMessageLength = 0;
         logger.maxLineLength = 0;
         logger.printStream = null;
-        logger.filePath = null;
+        logger.setFilePath(null);
         logger.systemLogger = null;
         logger.utilLogger = null;
         logger.customOutputHandler = null;
@@ -99,7 +98,7 @@ public class OLog {
      * @param filePath - A String containing the file's path to be used for appending log messages.
      */
     public static void setFilePath(String filePath) {
-        INST.logger.filePath = (filePath != null ? Path.of(filePath) : null);
+        INST.logger.setFilePath(filePath);
     }
 
     /**

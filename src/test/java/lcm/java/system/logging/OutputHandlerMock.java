@@ -1,7 +1,6 @@
 package lcm.java.system.logging;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PrintStream;
@@ -14,9 +13,11 @@ import lcm.java.system.Filer;
 
 class PrintStreamMock extends PrintStream {
     ArrayList<String> printedLines = new ArrayList<>();
+
     public PrintStreamMock(java.io.OutputStream arg0) {
         super(arg0);
     }
+
     @Override
     public void println(java.lang.String arg0) {
         printedLines.add(arg0);
@@ -25,18 +26,22 @@ class PrintStreamMock extends PrintStream {
 
 class SysLoggerMock implements java.lang.System.Logger {
     ArrayList<String> loggedMessages = new ArrayList<>();
+
     @Override
     public String getName() {
         throw new UnsupportedOperationException("Unimplemented method 'getName'");
     }
+
     @Override
     public boolean isLoggable(Level arg0) {
         throw new UnsupportedOperationException("Unimplemented method 'isLoggable'");
     }
+
     @Override
     public void log(Level arg0, ResourceBundle arg1, String arg2, Throwable arg3) {
         throw new UnsupportedOperationException("Unimplemented method 'log'");
     }
+
     @Override
     public void log(Level arg0, ResourceBundle arg1, String arg2, Object... arg3) {
         loggedMessages.add(arg2);
@@ -45,9 +50,11 @@ class SysLoggerMock implements java.lang.System.Logger {
 
 class UtilLoggerMock extends java.util.logging.Logger {
     ArrayList<String> loggedMessages = new ArrayList<>();
+
     UtilLoggerMock() {
         super(UtilLoggerMock.class.getName(), null);
     }
+
     @Override
     public void log(java.util.logging.Level level, String message) {
         loggedMessages.add(message);
@@ -72,6 +79,23 @@ class OutputHandlerMock implements BiConsumer<LogLevel, String> {
     List<String> verifyFileOutput(String... expectedMsgs) {
         assertTrue(Filer.exists(TEST_FILE));
         var fileMsgs = Filer.get(TEST_FILE).readAsList();
+
+        // Since it's possible for a single message to span multiple lines
+        // we must group different lines of the same message.
+        var condensedMessages = new ArrayList<String>();
+        String nextMsg = null;
+        for (String msg : fileMsgs) {
+            if (msg.startsWith("\t"))
+                nextMsg += '\n' + msg;
+            else {
+                if (nextMsg != null)
+                    condensedMessages.add(nextMsg);
+                nextMsg = msg;
+            }
+        }
+        condensedMessages.add(nextMsg);
+        fileMsgs = condensedMessages;
+
         for (int i = 0; i < expectedMsgs.length; i++)
             assertTrue(fileMsgs.get(i).endsWith(expectedMsgs[i]));
         return fileMsgs;
@@ -84,8 +108,7 @@ class OutputHandlerMock implements BiConsumer<LogLevel, String> {
             for (int i = 0; i < expectedMsgs.length; i++)
                 assertTrue(lines[i].endsWith(expectedMsgs[i]));
             return List.of(lines);
-        }
-        else { // Messages were not buffered
+        } else { // Messages were not buffered
             assertEquals(expectedMsgs.length, PS_MOCK.printedLines.size());
             for (int i = 0; i < expectedMsgs.length; i++)
                 assertTrue(PS_MOCK.printedLines.get(i).endsWith(expectedMsgs[i]));
@@ -121,16 +144,20 @@ class OutputHandlerMock implements BiConsumer<LogLevel, String> {
     }
 
     void verifyNoOutput() {
-        assertFalse(Filer.exists(TEST_FILE));
+        assertTrue(Filer.getForWriting(TEST_FILE).read().isEmpty());
         assertTrue(this.messages.isEmpty());
         assertTrue(PS_MOCK.printedLines.isEmpty());
         assertTrue(SYSLOGGER_MOCK.loggedMessages.isEmpty());
         assertTrue(UTILLOGGER_MOCK.loggedMessages.isEmpty());
     }
-    
-    void clear() {
+
+    void clear(boolean deleteFile) {
         this.messages.clear();
-        Filer.deleteIfExists(TEST_FILE);
+        if (deleteFile)
+            Filer.deleteIfExists(TEST_FILE);
+        else {
+            Filer.getForWriting(TEST_FILE).write("");
+        }
         PS_MOCK.printedLines.clear();
         SYSLOGGER_MOCK.loggedMessages.clear();
         UTILLOGGER_MOCK.loggedMessages.clear();

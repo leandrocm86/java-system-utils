@@ -18,9 +18,7 @@ public class Filer {
     private File file;
     private Path filePath;
 
-    // The instances must be created through the static builder methods
-    // get, create or getOrCreate, according to the existance of the file.
-    private Filer(String path) {
+    public Filer(String path) {
         this.file = new File(path);
         this.filePath = file.toPath();
     }
@@ -31,7 +29,7 @@ public class Filer {
      */
     public void write(String content) {
         try {
-            Files.writeString(filePath, content, charset, StandardOpenOption.WRITE);
+            Files.writeString(filePath, content, charset, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new IllegalArgumentException("Couldn't write on file " + filePath, e);
         }
@@ -114,12 +112,61 @@ public class Filer {
     }
 
     /**
+     * Checks if the file exists.
+     * @return boolean - True if the file exists.
+     */
+    public boolean exists() {
+        return this.file.exists();
+    }
+
+    /**
      * Checks if a file exists on the given path.
      * @param path - File's location path.
      * @return boolean - True if the file exists.
      */
     public static boolean exists(String path) {
         return new File(path).exists();
+    }
+
+    /**
+     * Determines if it's possible to write on the file, wether creating it or modifying it.
+     * @return true if the file exists and is writable or if the parent directory is writable, false otherwise
+     */
+    public boolean canCreateOrModify() {
+        if (this.file.exists())
+            return this.file.canWrite();
+        else {
+            File parentDirectory = this.file.getParentFile();
+            if (parentDirectory == null)
+                parentDirectory = new File(System.getProperty("user.dir"));
+            return parentDirectory.canWrite();
+        }
+    }
+
+    /**
+     * Determines if it's possible to write on a file on the given path, wether creating it or modifying it.
+     * @param  path	the path to the file to check
+     * @return true if the file exists and is writable or if the parent directory is writable, false otherwise
+     */
+    public static boolean canCreateOrModify(String path) {
+        return new Filer(path).canCreateOrModify();
+    }
+
+    /**
+     * Checks if it is possible to write on the existing file.
+     * @return boolean - True if the file both exists and is writable.
+     */
+    public boolean canModify() {
+        return this.file.canWrite();
+    }
+
+    /**
+     * Checks if it is possible to write on an existing file on the given path.
+     * @param path - File's location path.
+     * @return boolean - True if the file both exists and is writable.
+     */
+    public static boolean canModify(String path) {
+        return new File(path).canWrite();
     }
 
     /**
@@ -146,6 +193,20 @@ public class Filer {
     }
 
     /**
+     * Creates the file on the given path or throws an exception if the file already exists.
+     * @throws IllegalArgumentException if the file already exists.
+     */
+    public void create() {
+        if (this.file.exists())
+            throw new IllegalArgumentException("File " + this.filePath + " already exists!");
+        try {
+            this.file.createNewFile();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Couldn't create a file with the given path " + this.filePath, e);
+        }
+    }
+
+    /**
      * Creates a file on the given path or throws an exception if the file already exists.
      * @param path - File's location path.
      * @return Filer - Instance of Filer encapsulating the file.
@@ -168,15 +229,29 @@ public class Filer {
      * @param path - File's location path.
      * @return Filer - Instance of Filer encapsulating the file.
      */
-    public static Filer getOrCreate(String path) {
+    public static Filer getForWriting(String path) {
         Filer f = new Filer(path);
-        if (!f.file.exists())
+        if (!f.file.exists()) {
             try {
-                f.file.createNewFile();
+                if (f.file.createNewFile())
+                    return f;
+                else
+                    throw new IllegalArgumentException("Couldn't create a file with the given path " + path);
             } catch (IOException e) {
                 throw new IllegalArgumentException("Couldn't create a file with the given path " + path, e);
             }
+        }
+        else if (!f.file.canWrite()) {
+            throw new IllegalArgumentException("File exists on the given path, but it's not writable: " + path);
+        }
         return f;
     }
 
+    public File getFile() {
+        return file;
+    }
+
+    public Path getFilePath() {
+        return filePath;
+    }
 }

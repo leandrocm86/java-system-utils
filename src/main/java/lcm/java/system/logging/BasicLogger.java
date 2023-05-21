@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.BiConsumer;
 
+import lcm.java.system.Filer;
+
 class BasicLogger {
 
     class LogMessage {
@@ -59,13 +61,24 @@ class BasicLogger {
     int maxMessageLength;
     int maxLineLength;
     PrintStream printStream;
-    Path filePath;
+    private Path filePath;
     java.lang.System.Logger systemLogger;
     java.util.logging.Logger utilLogger;
     BiConsumer<LogLevel, String> customOutputHandler;
     List<LogMessage> discardedMessages = null;
     List<LogMessage> bufferedMessages = null;
     String unflushedMessagesWarning = null;
+
+    protected void setFilePath(String filePath) {
+        this.filePath = null;
+        if (filePath == null)
+            return;
+        try {
+            this.filePath = Filer.getForWriting(filePath).getFilePath();
+        } catch (Throwable e) {
+            error(e, "Couldn't create/open file to write on %s", filePath);
+        }
+    }
 
     void debug(String message, Object... params) {
         logMessage(LogLevel.DEBUG, message, params);
@@ -210,8 +223,7 @@ class BasicLogger {
         if (filePath != null)
             synchronized (this) {
                 try {
-                    StandardOpenOption operation = Files.exists(filePath) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE;
-                    Files.writeString(filePath, text + System.lineSeparator(), operation);
+                    Files.writeString(filePath, text + System.lineSeparator(), StandardOpenOption.APPEND);
                 } catch (IOException e) {
                     throw new IllegalArgumentException("Couldn't append on file " + filePath, e);
                 }

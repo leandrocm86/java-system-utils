@@ -1,4 +1,4 @@
-package lcm.java;
+/*package lcm.java;
 
 import lcm.java.system.Filer;
 import lcm.java.system.logging.OLog;
@@ -56,4 +56,4 @@ public class Main {
         
         System.out.println("All threads finished. Counted " + Filer.get(filePath).readAsList().size() + " lines.");
     }
-}
+}*/

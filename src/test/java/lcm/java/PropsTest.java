@@ -36,7 +36,7 @@ class PropsTest {
     @Test
     @Order(1)
     void testLoad() {
-        Filer.getOrCreate(TEST_FILE).write(Arrays.asList(TEST_PROPERTIES));
+        Filer.getForWriting(TEST_FILE).write(Arrays.asList(TEST_PROPERTIES));
         Props.load(TEST_FILE);
         assertEquals("Leo", Props.getString("name"));
         assertEquals("36", Props.getString("age"));

@@ -5,14 +5,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.opentest4j.TestAbortedException;
 
 class BasicLoggerTest {
@@ -27,7 +35,7 @@ class BasicLoggerTest {
         logger.dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         logger.customHeader = "";
         logger.customOutputHandler = outMock;
-        logger.filePath = Path.of(OutputHandlerMock.TEST_FILE);
+        logger.setFilePath(OutputHandlerMock.TEST_FILE);
         logger.printStream = OutputHandlerMock.PS_MOCK;
         logger.systemLogger = OutputHandlerMock.SYSLOGGER_MOCK;
         logger.utilLogger = OutputHandlerMock.UTILLOGGER_MOCK;
@@ -36,7 +44,7 @@ class BasicLoggerTest {
 
     @AfterEach
     void deleteTestFile() {
-        outMock.clear();
+        outMock.clear(true);
     }
 
     @Test
@@ -104,7 +112,7 @@ class BasicLoggerTest {
         logger.warn("Message three");
         logger.error("Message four");
         outMock.verifyAllOutputs("Message one", "Message three", "Message four");
-        outMock.clear();
+        outMock.clear(false);
         var discardedMessages = logger.flushDiscardedMessages();
         assertEquals(discardedMessages, outMock.verifyAllOutputs("Message two"));
     }
@@ -174,6 +182,29 @@ class BasicLoggerTest {
         assertEquals(2, lines.stream().filter(s -> s.equals("(...)")).count());
         assertTrue(lines.contains("CAUSED BY: org.opentest4j.TestAbortedException: First Exception Message"));
         assertTrue(out.length > 25 && out.length < 35);
+    }
+
+    @Test
+    void testInvalidFilePath(@TempDir Path tempDir) throws IOException {
+        Path filePath = tempDir.resolve("read-only-file.txt");
+
+        // Create a set of read-only file permissions
+        Set<PosixFilePermission> permissions = new HashSet<>();
+        permissions.add(PosixFilePermission.OWNER_READ);
+        permissions.add(PosixFilePermission.GROUP_READ);
+        permissions.add(PosixFilePermission.OTHERS_READ);
+
+        // Create a file with read-only permissions
+        FileAttribute<Set<PosixFilePermission>> attrs = 
+                PosixFilePermissions.asFileAttribute(permissions);
+        Files.createFile(filePath, attrs);
+
+        // This must output an error message, but not raise an exception.
+        logger.setFilePath(filePath.toString());
+
+        assertTrue(outMock.messages.size() == 1);
+        var errorMsg = outMock.messages.get(0);
+        assertTrue(errorMsg.contains("ERROR") && errorMsg.contains(filePath.toString()));
     }
 
 }

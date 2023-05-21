@@ -119,4 +119,31 @@ public class Sys {
         return Runtime.getRuntime().freeMemory();
     }
 
+    /**
+     * Retrieves the current content of the system clipboard as a string.
+     * @return the content of the system clipboard as a string
+     */
+    public static String getClipboard() {
+        return java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null).toString();
+    }
+
+    /**
+     * Sets the text to the system clipboard.
+     * @param text - the text to be set to the clipboard
+     */
+    public static void setClipboard(String text) {
+        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new java.awt.datatransfer.StringSelection(text), null);
+    }
+
+    /**
+     * Adds a shutdown hook to the current JVM. When the JVM is shutting down, the
+     * hook will be executed. The hook is executed in a separate thread. The
+     * function takes in a runnable which will be executed when the hook is invoked.
+     *
+     * @param  runnable  a runnable to be executed when the JVM is shutting down
+     */
+    public static void addShutdownHook(Runnable runnable) {
+        Runtime.getRuntime().addShutdownHook(new Thread(runnable));
+    }
+
 }

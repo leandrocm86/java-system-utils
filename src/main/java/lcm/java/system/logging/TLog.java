@@ -1,7 +1,6 @@
 package lcm.java.system.logging;
 
 import java.io.PrintStream;
-import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -29,7 +28,7 @@ public class TLog {
     private static int globalDefaultMaxMessageLength = 0;
     private static int globalDefaultMaxLineLength = 0;
     private static PrintStream globalDefaultPrintStream = null;
-    private static Path globalDefaultFilePath = null;
+    private static String globalDefaultFilePath = null;
     private static java.lang.System.Logger globalDefaultSystemLogger = null;
     private static java.util.logging.Logger globalDefaultUtilLogger = null;
     private static BiConsumer<LogLevel, String> globalDefaultCustomOutputHandler = null;
@@ -38,12 +37,10 @@ public class TLog {
     private static ThreadLocal<BasicLogger> threadLocal = new ThreadLocal<>() {
         @Override
         protected BasicLogger initialValue() {
-            System.out.println("Creating instance for thread " + Thread.currentThread().getId());
             return createLogger();
         }
         @Override
         public void remove() {
-            System.out.println("Destroying instance for thread " + Thread.currentThread().getId());
             super.get().finishInstance();
             super.remove();
         }
@@ -131,7 +128,7 @@ public class TLog {
      * @see #setFilePath(String)
      */
     public static void setGlobalDefaultFilePath(String globalDefaultFilePath) {
-        TLog.globalDefaultFilePath = globalDefaultFilePath != null ? Path.of(globalDefaultFilePath) : null;
+        TLog.globalDefaultFilePath = globalDefaultFilePath;
     }
 
     /**
@@ -231,7 +228,7 @@ public class TLog {
      * @param filePath - A String containing the file's path to be used for appending log messages from the current thread.
      */
     public static void setFilePath(String filePath) {
-        getInstance().filePath = filePath != null ? Path.of(filePath) : null;
+        getInstance().setFilePath(filePath);
     }
 
     /**
@@ -407,7 +404,7 @@ public class TLog {
         logger.maxMessageLength = globalDefaultMaxMessageLength;
         logger.maxLineLength = globalDefaultMaxLineLength;
         logger.printStream = globalDefaultPrintStream;
-        logger.filePath = globalDefaultFilePath;
+        logger.setFilePath(globalDefaultFilePath);
         logger.systemLogger = globalDefaultSystemLogger;
         logger.utilLogger = globalDefaultUtilLogger;
         logger.customOutputHandler = globalDefaultCustomOutputHandler;
