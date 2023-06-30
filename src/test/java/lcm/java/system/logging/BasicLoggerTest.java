@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.opentest4j.TestAbortedException;
 
+import lcm.java.system.Filer;
+
 class BasicLoggerTest {
     
     BasicLogger logger;
@@ -205,6 +207,18 @@ class BasicLoggerTest {
         assertTrue(outMock.messages.size() == 1);
         var errorMsg = outMock.messages.get(0);
         assertTrue(errorMsg.contains("ERROR") && errorMsg.contains(filePath.toString()));
+    }
+
+    @Test
+    void testAppendFail() {
+        var testFile = Filer.get(OutputHandlerMock.TEST_FILE);
+        testFile.getFile().setWritable(true);
+        logger.info("Message one");
+        testFile.getFile().setReadOnly();
+        logger.info("Message two"); // can't throw exception
+        outMock.verifyFileOutput("Message one");
+        assertTrue(OutputHandlerMock.PS_MOCK.printedLines.size() > 2);
+        testFile.getFile().setWritable(true);
     }
 
 }

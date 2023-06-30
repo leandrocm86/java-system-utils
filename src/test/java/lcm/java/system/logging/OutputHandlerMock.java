@@ -22,6 +22,12 @@ class PrintStreamMock extends PrintStream {
     public void println(java.lang.String arg0) {
         printedLines.add(arg0);
     }
+
+    @Override
+    public PrintStream printf(java.lang.String arg0, java.lang.Object... arg1) {
+        printedLines.add(String.format(arg0, arg1));
+        return super.printf(arg0, arg1);
+    }
 }
 
 class SysLoggerMock implements java.lang.System.Logger {
@@ -95,6 +101,8 @@ class OutputHandlerMock implements BiConsumer<LogLevel, String> {
         }
         condensedMessages.add(nextMsg);
         fileMsgs = condensedMessages;
+
+        assertTrue(fileMsgs.size() == expectedMsgs.length);
 
         for (int i = 0; i < expectedMsgs.length; i++)
             assertTrue(fileMsgs.get(i).endsWith(expectedMsgs[i]));

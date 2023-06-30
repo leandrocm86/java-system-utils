@@ -225,7 +225,8 @@ class BasicLogger {
                 try {
                     Files.writeString(filePath, text + System.lineSeparator(), StandardOpenOption.APPEND);
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("Couldn't append on file " + filePath, e);
+                    if (printStream != null)
+                        printStream.printf("Couldn't append on file %s\n%s\n", filePath, summary(e));
                 }
             }
     }
