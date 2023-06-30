@@ -119,4 +119,12 @@ class FilerTest {
         assertFalse(Filer.canCreateOrModify(filePath.toAbsolutePath().toString()));
         assertFalse(Filer.canCreateOrModify(folderPath.resolve("test.txt").toAbsolutePath().toString()));
     }
+
+    @Test
+    void testWriteToDirectory() {
+        makeTestFile();
+        var file = Filer.get(TEST_FILE).getFile();
+        var directoryPath = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf("/"));
+        assertThrows(IllegalArgumentException.class, () -> Filer.getForWriting(directoryPath));
+    }
 }

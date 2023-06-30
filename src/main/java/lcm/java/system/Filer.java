@@ -241,9 +241,10 @@ public class Filer {
                 throw new IllegalArgumentException("Couldn't create a file with the given path " + path, e);
             }
         }
-        else if (!f.file.canWrite()) {
+        else if (!f.file.canWrite())
             throw new IllegalArgumentException("File exists on the given path, but it's not writable: " + path);
-        }
+        else if (f.file.isDirectory())
+            throw new IllegalArgumentException("File exists on the given path, but it's a directory: " + path);
         return f;
     }
 
